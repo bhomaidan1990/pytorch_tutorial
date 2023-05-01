@@ -18,6 +18,9 @@ else:
 1) model
 2) loss and optimizer
 3) training loop
+  3.1 Forward pass: compute prediction
+  3.2 Backward pass: gradients 
+  3.3 Update whights
 """
 
 # 0) Data Perparation
