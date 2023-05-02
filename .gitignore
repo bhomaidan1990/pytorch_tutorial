@@ -12,6 +12,12 @@ __pycache__/
 # Data
 data/
 
+# Tensorboard Logs
+runs/
+
+# Models
+models
+
 # Distribution / packaging
 .Python
 build/
