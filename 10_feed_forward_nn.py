@@ -6,7 +6,7 @@ import torch.nn as nn
 import torchvision
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
-import tqdm
+from tqdm import tqdm
 
 if torch.cuda.is_available():
     device_ = torch.device("cuda")
@@ -23,18 +23,29 @@ num_epochs = 2
 batch_size=100
 learning_rate = 0.001
 
+
+mean = (0.1307,) 
+std  = (0.3081,)
+
+transform = transforms.Compose(
+    [
+        transforms.ToTensor(),
+        transforms.Normalize(mean, std)
+    ]
+)
+
 # MNIST
 train_dataset = torchvision.datasets.MNIST(
     root="./data",
     train=True,
-    transform=transforms.ToTensor(), 
+    transform=transform, 
     download=True
 )
 
 test_dataset = torchvision.datasets.MNIST(
     root="./data",
     train=False,
-    transform=transforms.ToTensor()
+    transform=transform
 )
 
 train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
@@ -109,3 +120,6 @@ with torch.no_grad():
 
     acc = 100.0 * n_correct / n_samples
     print(f'accuracy = {acc*100} %')
+
+PATH = "/home/belal/git/pytorch_tutorial/models/mnist_model.pth"
+torch.save(model.state_dict(), PATH)
