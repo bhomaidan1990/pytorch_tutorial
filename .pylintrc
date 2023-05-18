@@ -1,0 +1,34 @@
+[MASTER]
+
+init-hook="from pylint.config import find_pylintrc; import os, sys; sys.path.append(os.path.dirname(find_pylintrc()))"
+ignore=CVS
+jobs=1
+persistent=yes
+
+[MESSAGES CONTROL]
+
+disable=
+    missing-docstring,          # not everything needs a docstring
+    fixme,                      # work in progress
+    bad-continuation,           # clashes with black
+    duplicate-code,             # finds dupes between tests and plugins
+    too-few-public-methods,     # triggers when inheriting
+    ungrouped-imports,          # clashes with isort
+
+[TYPECHECK]
+# List of members which are set dynamically and missed by pylint inference
+# system, and so shouldn't trigger E1101 when accessed. Python regular
+# expressions are accepted.
+generated-members=numpy.*,torch.*
+
+[BASIC]
+
+good-names=e,ex,f,fp,i,j,k,n,_
+
+[FORMAT]
+
+indent-string='    '
+max-line-length=160
+
+[DESIGN]
+max-locals=16
