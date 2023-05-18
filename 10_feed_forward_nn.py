@@ -8,6 +8,11 @@ import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
+import io
+import numpy as np
+import torch.utils.model_zoo as model_zoo
+import torch.onnx
+
 if torch.cuda.is_available():
     device_ = torch.device("cuda")
     print("========================\nYou are running on GPU!\n========================")
@@ -123,3 +128,20 @@ with torch.no_grad():
 
 PATH = "/home/belal/git/pytorch_tutorial/models/mnist_model.pth"
 torch.save(model.state_dict(), PATH)
+
+# Input to the model
+x = torch.randn(batch_size, 1, 28, 28, requires_grad=True, device=device_)
+x = x.view(x.size(0), -1)
+torch_out = model(x)
+
+# Export the model
+torch.onnx.export(model,                     # model being run
+                  x,                         # model input (or a tuple for multiple inputs)
+                  "mnist.onnx",              # where to save the model (can be a file or file-like object)
+                  export_params=True,        # store the trained parameter weights inside the model file
+                  opset_version=10,          # the ONNX version to export the model to
+                  do_constant_folding=True,  # whether to execute constant folding for optimization
+                  input_names = ['input'],   # the model's input names
+                  output_names = ['output'], # the model's output names
+                  dynamic_axes={'input' : {0 : 'batch_size'},    # variable length axes
+                                'output' : {0 : 'batch_size'}})
